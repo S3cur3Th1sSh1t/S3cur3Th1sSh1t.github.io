@@ -29,7 +29,7 @@ Matt Graeber <a href="https://twitter.com/mattifestation/status/7352611204877721
 [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
 ```
 
-This bypass is basically is assigning ```amsiInitFailed``` a boolean ```True``` value so that AMSI initialization fails - no scan will be done at all for the current process.
+This bypass is basically assigning ```amsiInitFailed``` a boolean ```True``` value so that AMSI initialization fails - no scan will be done at all for the current process.
 
 Just executing this oneliner in Powershell results in an <i>This script contains malicious content and has been blocked by your antivirus software</i> message:
 
@@ -170,7 +170,7 @@ Until today I still use open source powershell projects in most pentests, althou
           <img src="/assets/posts/2020-09-02-Bypass_AMSI_by_manual_modification/ISE-Steroids_obfuscate.JPG">
 </p>
 
-We are not obfuscating anything here for now, because we want to see were exactly the trigger is:
+We are not obfuscating anything here for now, because we want to locate the trigger exactly:
 
 <p align="center">
           <img src="/assets/posts/2020-09-02-Bypass_AMSI_by_manual_modification/ISE-Steroids_Remove_Comments.JPG">
@@ -201,7 +201,7 @@ Basically no bypass is needed if the trigger itself is modified in the script/bi
 
 ## Whats next?
 
-This first blog post took much more time than I had initially planned. I welcome any feedback and suggestions for further improvement.
+This first blog post took much more time than I had initially planned. I welcome any feedback and suggestions for further improvement. You can reach my via  <a href="https://twitter.com/ShitSecure">Twitter</a>, other channels are linked at the top. 
 
 I´m pretty sure that i will write more posts in the future.
 

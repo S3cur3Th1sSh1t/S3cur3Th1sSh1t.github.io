@@ -7,13 +7,13 @@ This blog post will cover some lets say more advanced AMSI triggers. I decided t
 
 ## Introduction
 
-If you read my last blog post <a href="https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/">Bypass AMSI by manual modification</a> you may have thought about finding triggers for ```Invoke-Mimikatz``` or ```Sharphound``` and build your own version not flagged by AMSI. Well thats a little more complicated because theese tools are flagged by way more different triggers. But it´s still signatures. I will also cover some pitfalls. There is no "new" technique in this blog post, i will simply explain my own procedures and thoughts step by step.
+If you read my last blog post <a href="https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/">Bypass AMSI by manual modification</a> you may have thought about finding triggers for ```Invoke-Mimikatz``` or ```Sharphound``` and build your own version not flagged by AMSI. Well thats a little more complicated because theese tools are flagged by way more different triggers. But it´s still signatures. I will also cover some pitfalls. There is no "new" technique in this blog post, I will simply explain my own procedures and thoughts step by step.
 
 ## How is Invoke-Mimikatz working?
 
 If you already know how ```Invoke-Mimikatz``` works just skip this section.
 
-Well i have to admit when i first used ```Invoke-Mimikatz``` or many other offensive security tools i did not take a look at the source code and just used them because they were "trusted by the community". And obviously because when i began working as penetration tester i had no clue of nearly anything. Being a sysadmin before did not help me understand code. One of the first things i do today is taking a look at the code for new tools. In my opinion this is important to prevent unwanted actions on a client and to understand how the magic behind the code actually works.  ```Invoke-Mimikatz``` is not a Mimikatz version written in Powershell. The easiest way to find out how its working is taking a look at the .Notes section:
+Well I have to admit when I first used ```Invoke-Mimikatz``` or many other offensive security tools I did not take a look at the source code and just used them because they were "trusted by the community". And obviously because when I began working as penetration tester I had no clue of nearly anything. Being a sysadmin before did not help me understand code. One of the first things I do today is taking a look at the code for new tools. In my opinion this is important to prevent unwanted actions on a client and to understand how the magic behind the code actually works.  ```Invoke-Mimikatz``` is not a Mimikatz version written in Powershell. The easiest way to find out how its working is taking a look at the .Notes section:
 
 ```text
 .NOTES
@@ -311,15 +311,15 @@ To get around this we have two options:
 * Encoding/Encrypting the base64 encoded Mimikatz part
 * Building our own custom Mimikatz which has no triggers
 
-I don´t want this blog post to blow up so we will choose the first option here. And because many encoded variants of Mimikatz also contain triggers as of today we will chose the encryption way, i mentioned something about randomness in the last blog post. Randomness is really helpfull against signatures.
+I don´t want this blog post to blow up so we will choose the first option here. And because many encoded variants of Mimikatz also contain triggers as of today we will chose the encryption way, I mentioned something about randomness in the last blog post. Randomness is really helpfull against signatures.
 
-How do we actually encrypt that? I will use my <a href="https://github.com/S3cur3Th1sSh1t/Invoke-SharpLoader/blob/master/Invoke-SharpEncrypt.ps1">Invoke-SharpEncrypt</a> script which is a powershell version of Cn33liz´s <a href="https://github.com/Cn33liz/p0wnedLoader">p0wnedLoader</a> with minor modifications. To encrypt the ```$PEBytes64``` and ```$PEBytes32``` values they are stored in separate text files on the disk. I also added a ```#```-character at the very beginning of the base64 binary and at the end of it. This is to filter the exact payload after decryption, i had some annoying problems with newlines and spaces. The following command actually encrypts a text file:
+How do we actually encrypt that? I will use my <a href="https://github.com/S3cur3Th1sSh1t/Invoke-SharpLoader/blob/master/Invoke-SharpEncrypt.ps1">Invoke-SharpEncrypt</a> script which is a powershell version of Cn33liz´s <a href="https://github.com/Cn33liz/p0wnedLoader">p0wnedLoader</a> with minor modifications. To encrypt the ```$PEBytes64``` and ```$PEBytes32``` values they are stored in separate text files on the disk. I also added a ```#```-character at the very beginning of the base64 binary and at the end of it. This is to filter the exact payload after decryption, I had some annoying problems with newlines and spaces. The following command actually encrypts a text file:
 
 <p align="center">
           <img src="/assets/posts/2020-09-09-Bypass-AMSI-by-manual-modification-part-II/SharpEncrypt.JPG">
 </p>
 
-Afterwards i did the same with the x86 version. To decrypt the value at runtime i will use a modified version of <a href="https://github.com/S3cur3Th1sSh1t/Invoke-SharpLoader/blob/master/Invoke-SharpLoader.ps1">Invoke-Sharploader</a>. We actually dont want to load a Powershell script via ```Assembly.load()``` and we dont need the download part and no AMSI bypass or ETW block here. So i removed all those stuff. The decryption function now looks like this:
+Afterwards I did the same with the x86 version. To decrypt the value at runtime I will use a modified version of <a href="https://github.com/S3cur3Th1sSh1t/Invoke-SharpLoader/blob/master/Invoke-SharpLoader.ps1">Invoke-Sharploader</a>. We actually dont want to load a Powershell script via ```Assembly.load()``` and we dont need the download part and no AMSI bypass or ETW block here. So I removed all those stuff. The decryption function now looks like this:
 
 ```batch
 $powerdecrypt = @"
@@ -486,7 +486,7 @@ is changed to
 ```text
 $('po'+'wer'+'she'+'ll_'+'ref'+'lec'+'tiv'+'e_m'+'imi'+'ka'+'tz')
 ```
-Unfortunately i could not find the exact next trigger locations but replacing the following variable names and parameter names in exactly this order gets you around AMSI at the time of writing:
+Unfortunately I could not find the exact next trigger locations but replacing the following variable names and parameter names in exactly this order gets you around AMSI at the time of writing:
 
 <table style="width:100%">
   <tr>
@@ -550,9 +550,9 @@ Sometimes Defender is too late at killing the process so that the credentials ar
 
 ## Conclusion
 
-If you didn´t know whats behind ```Invoke-Mimikatz``` i hope know you do. We learned how to find more advanced AMSI triggers and that even theese can be bypassed by manual modification without the need of patching ```amsi.dll```. Maybe there will be AV/EDR vendors in the new future which look for ```amsi.dll``` patches to detect attackers. If that´s gonna happen you can use manual modification instead of traditional bypasses.
+If you didn´t know whats behind ```Invoke-Mimikatz``` I hope know you do. We learned how to find more advanced AMSI triggers and that even theese can be bypassed by manual modification without the need of patching ```amsi.dll```. Maybe there will be AV/EDR vendors in the new future which look for ```amsi.dll``` patches to detect attackers. If that´s gonna happen you can use manual modification instead of traditional bypasses.
 
-Using an unobfuscated Mimikatz version like we did here you will also get more likely detected. In the next blog post i will therefore build a custom ```Mimikatz.exe``` by doing source code modifications. If you are also interested in this topic stay tuned.
+Using an unobfuscated Mimikatz version like we did here you will also get more likely detected. In the next blog post I will therefore build a custom ```Mimikatz.exe``` by doing source code modifications. If you are also interested in this topic stay tuned.
 
 For questions or feedback you can reach me via the channels linked at the top of the page.  
 

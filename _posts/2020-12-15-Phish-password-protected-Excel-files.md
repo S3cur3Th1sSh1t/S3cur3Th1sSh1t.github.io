@@ -3,23 +3,23 @@ title: "Excel-Phish - Phish protected Excel-file passwords"
 layout: "post"
 ---
 
-This post will cover a little Excel Macro project by <a href="https://twitter.com/0x23353435">@0x23353435</a> and me. It was made during an engagement at a customers environment. They were using password a protected Excel-file as password manager. This post will show how to attack such szenarios and why people should not use this method for password storage.
+This post will cover a little Excel Macro project by <a href="https://twitter.com/0x23353435">@0x23353435</a> and me. It was made during an engagement at a customers environment. They were using a password protected Excel-file as password manager. This post will show how to attack such szenarios and why people should not use this method for password storage.
 
 ## Introduction
 
-Excel gives users the option of assigning a password to the sheet so that its protected from unauthorized access. This can be done under the `File` -> `Info` -> `Protect Workbook` -> `Encrypt with Password` tab:
+Excel gives users the option of assigning a password to the sheet so that it is protected from unauthorized access. This can be done under the `File` -> `Info` -> `Protect Workbook` -> `Encrypt with Password` tab:
 
 <p align="center">
           <img src="/assets/posts/ExcelPhish/ProtectWorkbook.JPG">
 </p>
 
-If you find and open a password protected Excel-Sheet in it will look like this:
+If you find and open a password protected Excel-Sheet it will look like this:
 
 <p align="center">
           <img src="/assets/posts/ExcelPhish/Protected.JPG">
 </p>
 
-0x23353435 and me were at a customers environment for an internal penetrationtest earlier this year. In order to make the criticality of the found vulnerabilities clear, we usually show the customer the worst case - if agreed. With the highest privileges, it is just a matter of time before the attacker reaches his given goal. We already archieved the goals from `Domain Administrator` to `Global Admin` for the Azure-Cloud and access to `protected networks`. However, we had not managed to gain access to the password manager of the internal IT. Accordingly, access to firewalls, switches, etc. was not yet ensured. However, we already found out that a password protected Excel-file is used for these passwords. It was located in the file servers network-share of the administrators team. Only group members of their team had read and write permissions here. We had some administrators credentials at this point so we also had write permissions on this share. Our first attempt to access the missing passwords took place using <a href="https://github.com/openwall/john/blob/bleeding-jumbo/run/office2john.py">office2john.py</a>. Getting a crackable hash from the protected Excel-file is as simple as follows:
+0x23353435 and me were at a customers environment for an internal penetrationtest earlier this year. In order to make the criticality of the found vulnerabilities clear, we usually show the customer the worst case - if agreed. With the highest privileges, it is just a matter of time before the attacker reaches his given goal. We already achieved the goals from `Domain Administrator` to `Global Admin` for the Azure-Cloud and access to `protected networks`. However, we had not managed to gain access to the password manager of the internal IT. Accordingly, access to firewalls, switches, etc. was not yet ensured. However, we already found out that a password protected Excel-file is used for these passwords. It was located in the file servers network-share of the administrators team. Only group members of their team had read and write permissions here. We had some administrators credentials at this point so we also had write permissions on this share. Our first attempt to access the missing passwords took place using <a href="https://github.com/openwall/john/blob/bleeding-jumbo/run/office2john.py">office2john.py</a>. Getting a crackable hash from the protected Excel-file is as simple as follows:
 
 ```batch
 python office2john.py Protected.xlsx > Excelhash.txt
@@ -41,13 +41,13 @@ To match the password protected Excel sheets form asking for a password we named
           <img src="/assets/posts/ExcelPhish/Labels.JPG">
 </p> 
 
-Adding two `CommandButtons` and one `Text-Box` results in a window which looks like the password protected Excel-files Text-Box:
+Adding two `CommandButtons` and one `Text-Box` results in a window which looks like the password protected Excel-file's Text-Box:
 
 <p align="center">
           <img src="/assets/posts/ExcelPhish/Buttons.JPG">
 </p>
 
-Now we thought about how to exfiltrate the password. There are several ways and each one has its pros and cons. In this specific case we had an attacker system on the same network so it was the easiest way to exfiltrate the password via Web-Request to our webserver. If you don't have a system on the same network you can also exfiltrate the password via for example DNS. We wanted the password to be encoded before sending it, so we searched for an VBA Base64 function and found it on the web:
+Now we thought about how to exfiltrate the password. There are several ways and each one has its pros and cons. In this specific case we had an attacker system on the same network so it was the easiest way to exfiltrate the password via Web-Request to our webserver. If you don't have a system on the same network you can also exfiltrate the password via for example DNS. We wanted the password to be encoded before sending it, so we searched for a VBA Base64 function and found it on the web:
 
 ```batch
 Function EncodeBase64(text As String) As String
@@ -183,7 +183,7 @@ Excel-Phish can be found on my github page:
 
 ## Further Considerations
 
-There was one more thing we didn't want to happen. After adding macros to an Excel file the users will most likely see an "Warning" button which has to be enabled before our MessageBox pops up.
+There was one more thing we didn't want to happen. After adding macros to an Excel file the users will most likely see a "Warning" button which has to be enabled before our MessageBox pops up.
 
 <p align="center">
           <img src="/assets/posts/ExcelPhish/Warning.JPG">
@@ -201,7 +201,7 @@ With given credentials for your target account, it is also possible to login wit
 
 First and most importantly, any vulnerabilities and misconfigurations that allow an attacker to elevate privileges in an Active Directory environment should be addressed. If the quick elevation of privileges can be prevented, attacks like the one listed here are not easily possible. At least not if the permissions for network shares have been configured properly.
 
-One thing should be clear: Never use Excel-files - even password protected as Password manager. There are better and safer ways for password storage. Our recommendation is using a centralized Password manager solution accessible only via Multi-factor-Authentication. Optimally, the solution should support a role and authorization concept.
+One thing should be clear: Never use Excel-files - even password protected as password manager. There are better and safer ways for password storage. Our recommendation is using a centralized Password manager solution accessible only via Multi-factor-Authentication. Optimally, the solution should support a role and authorization concept.
 
 The best way to protect against macros in office documents is allowing only digitally signed macros:
 
@@ -211,11 +211,11 @@ The best way to protect against macros in office documents is allowing only digi
 
 ## Conclusion
 
-We showed a way to get the cleartext password of password protected Excel-files via macro and Phishing. To do so, you "only" need write permissions on the original document.
+We showed a way to get the cleartext password of password protected Excel-files via macro and phishing. To do so, you "only" need write permissions on the original document.
 
 Cracking a weak password or using a keylogger are alternatives for a situation like that.
 
-Don't use Excel-files for your passwords and allow only digitally signed macros if possible. Check your Trusted locations - maybe they can be configured more restrictive.
+Don't use Excel-files for your passwords and allow only digitally signed macros if possible. Check your trusted locations - maybe they can be configured more restrictive.
 
 ## Links & Resources
 

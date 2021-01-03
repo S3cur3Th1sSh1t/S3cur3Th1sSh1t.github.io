@@ -56,13 +56,24 @@ C:\oracle\java\bin\
 
 Dropping a binary in this directory enables us to execute code without restrictions. We can simply place one of the tools mentioned above (not the `MSBuild.exe` or `Rundll32.exe` based ones) in the folder and execute any Powershell command without restrictions because we are also bypassing `Constrained Language Mode`. So far so easy, no new techniques or toolings.
 
-Fun fact: a writeble PATH variable folder location allows a local privilege escalation on the affected clients. The `C:\oracle\java\bin` path was writable and included in the PATH environment variables in this case. You can find this vulnerability with a simple <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">script</a>. If you place a DLL in that directory, which is not located anywhere on the disk but which is demanded by for example a windows service and executed with `NT-Authority\SYSTEM` rights you can gain a system shell. Some publicy known DLLs to exploit this vulnarbility are:
+Fun fact: a writeble PATH variable folder location allows a local privilege escalation on the affected clients. The `C:\oracle\java\bin` path was writable and included in the PATH environment variables in this case. You can find this vulnerability with a simple <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">script</a>. If you place a DLL in that directory, which is not located anywhere on the disk but which is demanded by for example a windows service and executed with `NT-Authority\SYSTEM` rights you may gain a system shell. In addition this service must act on the default DLL search order. Some publicy known DLLs to exploit this vulnarbility are:
+
+* CDPSvc.dll - Connected Devices Platform Service (CDPSvc) - <a href="http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html">http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html</a>
+* WptsExtensions.dll - Windows 10 Task Scheduler service - <a href="https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html">https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html</a>
+* wlanhlp.dll - Windows Server 2008R2 - 2019 NetMan DLL Hijacking <a href="https://itm4n.github.io/windows-server-netman-dll-hijacking/">https://itm4n.github.io/windows-server-netman-dll-hijacking/</a>
+
+---
+**Update**
+
+Thank you <a href="https://twitter.com/itm4n">itm4n</a> for the clarification. I previously wrote that the following three DLL names are vulnerable. This is not the case, since the default DLL search order is not being used here. Those following three can only be loaded from the SYSTEM32 directory.
+
+---
 
 * windowscoredeviceinfo.dll - loaded whenever an Update Session is created - <a href="https://github.com/itm4n/UsoDllLoader">itm4ns UsoDllLoader</a>
 * phoneinfo.dll - windows problem reporting service - <a href="https://github.com/sailay1996/WerTrigger">sailay1996s WerTrigger</a>
 * Ualapi.dll - Fax Service - <a href="https://github.com/ionescu007/faxhell">ionescu007s faxhell</a>
 
-The only usable list I found so far containing DLL-names to exploit this kind of vulnerability is <a href="https://github.com/sailay1996/awesome_windows_logical_bugs/blob/master/FileWrite2system.txt">here</a>.
+If someone of you knows about more vulnerable services / DLL Hijack possibilities - feel free to DM me.
 
 ## Playing with OffensiveNim
 
@@ -337,6 +348,9 @@ Wrapping existing tools into another language CAN be used for AV-Evasion but i t
 * Generic Applocker bypass - <a href="https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md">https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md</a>
 * Verified Applocker bypass - <a href="https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md">https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md</a>
 * Find writable PATH Environment variable locations - <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f</a>
+* Connected Devices Platform Service (CDPSvc) DLL Hijack - <a href="http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html">http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html</a>
+* Windows 10 Task Scheduler service DLL Hijack - <a href="https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html">https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html</a>
+* Windows Server 2008R2 - 2019 NetMan DLL Hijacking <a href="https://itm4n.github.io/windows-server-netman-dll-hijacking/">https://itm4n.github.io/windows-server-netman-dll-hijacking/</a>
 * UsoDllLoader - <a href="https://github.com/itm4n/UsoDllLoader">https://github.com/itm4n/UsoDllLoader</a>
 * WerTrigger - <a href="https://github.com/sailay1996/WerTrigger">https://github.com/sailay1996/WerTrigger</a>
 * Faxhell - <a href="https://github.com/ionescu007/faxhell">https://github.com/ionescu007/faxhell</a>

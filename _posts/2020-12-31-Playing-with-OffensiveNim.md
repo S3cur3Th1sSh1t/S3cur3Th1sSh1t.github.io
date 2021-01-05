@@ -63,7 +63,7 @@ Fun fact: a writeble PATH variable folder location allows a local privilege esca
 * wlanhlp.dll - Windows Server 2008R2 - 2019 NetMan DLL Hijacking <a href="https://itm4n.github.io/windows-server-netman-dll-hijacking/">https://itm4n.github.io/windows-server-netman-dll-hijacking/</a>
 
 ---
-**Update**
+**03.01.2021: Update**
 
 Thank you <a href="https://twitter.com/itm4n">itm4n</a> for the clarification. I previously wrote that the following three DLL names are vulnerable. This is not the case, since the default DLL search order is not being used here. Those following three can only be loaded from the SYSTEM32 directory.
 

@@ -285,7 +285,7 @@ The detection of .NET assemblies in Nim compiled executables is still pretty eas
           <img src="/assets/posts/NimPlaying/HexPSBypass.png">
 </p>
 
-Flagging theese bytes is pretty easy for AV-Vendors. So this method is not really good to bypass AV-Software. So if you want your Nim compiled binary to hide the .NET assembly you have to encode/encrypt it and decode/decrypt it at runtime. Base64 encoding and decoding can be done in Nim with the following code:
+Flagging theese bytes is pretty easy for AV-Vendors. So this method alone is not really good to bypass AV-Software. So if you want your Nim compiled binary to hide the .NET assembly you have to encode/encrypt it and decode/decrypt it at runtime. Base64 encoding and decoding can be done in Nim with the following code:
 
 ```batch
 import base64
@@ -314,7 +314,7 @@ To fully hide the .NET assembly in the resulting binary you could use AES encryp
 
 <a href="https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim">https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim</a>
 
-This can be used to encrypt .NET assemblies and for runtime decryption:
+This can be used to encrypt .NET assemblies as well as for runtime decryption:
 
 <p align="center">
           <img src="/assets/posts/NimPlaying/EncryptDecrypt.png">

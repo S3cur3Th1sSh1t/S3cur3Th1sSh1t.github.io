@@ -282,7 +282,7 @@ So wrapping binaries into other languages CAN be used to bypass AV-Software as w
 The detection of .NET assemblies in Nim compiled executables is still pretty easy for AV-Vendors. If we embed the plaintext .NET assembly bytes an analyst can see the embeded binary by just opening it in a hex editor:
 
 <p align="center">
-          <img src="/assets/posts/NimPlaying/HexPSBypass.PNG">
+          <img src="/assets/posts/NimPlaying/HexPSBypass.png">
 </p>
 
 Flagging theese bytes is pretty easy for AV-Vendors. So this method is not really good to bypass AV-Software. So if you want your Nim compiled binary to hide the .NET assembly you have to encode/encrypt it and decode/decrypt it at runtime. Base64 encoding and decoding can be done in Nim with the following code:
@@ -317,7 +317,7 @@ To fully hide the .NET assembly in the resulting binary you could use AES encryp
 This can be used to encrypt .NET assemblies and for runtime decryption:
 
 <p align="center">
-          <img src="/assets/posts/NimPlaying/EncryptDecrypt.PNG">
+          <img src="/assets/posts/NimPlaying/EncryptDecrypt.png">
 </p>
 
 I´ll leave this up to the reader, but one important tip: `import winim/clr` and `import nimcrypto` results in a stack overflow for the AES initialization at the time of writing. So you need to import `winim/clr` via the following:

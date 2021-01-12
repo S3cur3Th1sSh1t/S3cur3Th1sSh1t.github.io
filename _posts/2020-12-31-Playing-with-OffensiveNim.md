@@ -277,7 +277,7 @@ The NimRubeus version got 16/70 detections:
 So wrapping binaries into other languages CAN be used to bypass AV-Software as well. However I recommend to obfuscate any C# binary before turning it into an byte array - this should result in even less detections. And if you do it right there is no need for an AMSI bypass. The more people use OffensiveNim I strongly believe that even the small peaces of the Nim template could be flagged someday. So modifications to the template should also be done at this point to stay undetected.
 
 ---
-**12.01.2021: Update - Detection methods**
+**12.01.2021: Update - Detection methods & Encoding/Encryption**
 
 The detection of .NET assemblies in Nim compiled executables is still pretty easy for AV-Vendors. If we embed the plaintext .NET assembly bytes an analyst can see the embeded binary by just opening it in a hex editor:
 

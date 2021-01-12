@@ -276,6 +276,60 @@ The NimRubeus version got 16/70 detections:
 
 So wrapping binaries into other languages CAN be used to bypass AV-Software as well. However I recommend to obfuscate any C# binary before turning it into an byte array - this should result in even less detections. And if you do it right there is no need for an AMSI bypass. The more people use OffensiveNim I strongly believe that even the small peaces of the Nim template could be flagged someday. So modifications to the template should also be done at this point to stay undetected.
 
+---
+**12.01.2021: Update - Detection methods**
+
+The detection of .NET assemblies in Nim compiled executables is still pretty easy for AV-Vendors. If we embed the plaintext .NET assembly bytes an analyst can see the embeded binary by just opening it in a hex editor:
+
+<p align="center">
+          <img src="/assets/posts/NimPlaying/HexPSBypass.PNG">
+</p>
+
+Flagging theese bytes is pretty easy for AV-Vendors. So this method is not really good to bypass AV-Software. So if you want your Nim compiled binary to hide the .NET assembly you have to encode/encrypt it and decode/decrypt it at runtime. Base64 encoding and decoding can be done in Nim with the following code:
+
+```batch
+import base64
+import os
+
+func toByteSeq*(str: string): seq[byte] {.inline.} =
+    # Converts a string to the corresponding byte sequence
+    @(str.toOpenArrayByte(0, str.high))
+
+let inFile: string = paramStr(1)
+let inFileContents: string = readFile(inFile)
+
+# To load this .NET assembly we need a byte array or sequence
+var bytesequence: seq[byte] = toByteSeq(inFileContents)
+
+let encoded = encode(bytesequence)
+
+echo fmt"[*] Encoded: {encoded}"
+
+let decoded = decode(encoded)
+
+echo fmt"[*] Decoded: {decoded}"
+```
+
+To fully hide the .NET assembly in the resulting binary you could use AES encryption or XOR-operations. <a href="https://github.com/byt3bl33d3r">@byt3bl33d3r</a> just published an PoC for encryption and decryption via Nim:
+
+<a href="https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim">https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim</a>
+
+This can be used to encrypt .NET assemblies and for runtime decryption:
+
+<p align="center">
+          <img src="/assets/posts/NimPlaying/EncryptDecrypt.PNG">
+</p>
+
+I´ll leave this up to the reader, but one important tip: `import winim/clr` and `import nimcrypto` results in a stack overflow for the AES initialization at the time of writing. So you need to import `winim/clr` via the following:
+
+```batch
+import winim/clr except `[]`
+```
+
+Thanks <a href="https://twitter.com/chvancooten">https://twitter.com/chvancooten</a> for figuring this out.
+
+---
+
 If we step back to the environment with `Constrained Language Mode` and `Applocker` active we could also use one of the mentioned tools to bypass both features with a Nim wrapper. The following code for example contains <a href="https://github.com/padovah4ck/PSByPassCLM">PSByPassCLM</a> wrapped into Nim, which enables us to bypass both features by placing this compiled binary into the `C:\oracle\bin\` folder:
 
 ```batch

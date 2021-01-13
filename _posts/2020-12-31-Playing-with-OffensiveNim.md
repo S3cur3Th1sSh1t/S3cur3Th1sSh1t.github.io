@@ -290,6 +290,7 @@ Flagging theese bytes is pretty easy for AV-Vendors. So this method alone is not
 ```batch
 import base64
 import os
+import strformat
 
 func toByteSeq*(str: string): seq[byte] {.inline.} =
     # Converts a string to the corresponding byte sequence

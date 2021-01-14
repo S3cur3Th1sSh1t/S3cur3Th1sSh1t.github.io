@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 This blog post will cover some lets say more advanced AMSI triggers. I decided to build a custom Invoke-Mimikatz script without AMSI trigger. I will also cover some information how Invoke-Mimikatz basically works for those who did not know it before.
-
+<!--more-->
 ## Introduction
 
 If you read my last blog post <a href="https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/">Bypass AMSI by manual modification</a> you may have thought about finding triggers for ```Invoke-Mimikatz``` or ```Sharphound``` and build your own version not flagged by AMSI. Well thats a little more complicated because theese tools are flagged by way more different triggers. But it´s still signatures. I will also cover some pitfalls. There is no "new" technique in this blog post, I will simply explain my own procedures and thoughts step by step.

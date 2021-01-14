@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 This is my very first blog post. Its about how to manually change AMSI signatures/triggers to bypass it.
-
+<!--more-->
 ## Introduction
 
 To keep it short the Antimalware Scan Interface (AMSI) is an interface introduced by Microsoft to gain insight into malware that attackers try to load straight into memory. According to <a href="https://docs.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal">Microsoft</a>, AMSI is used for the following Windows components:

@@ -3,8 +3,8 @@ title: "Customizing C2-Frameworks for AV-Evasion"
 layout: "post"
 ---
 
-This post will cover how to edit open source Command & Control (C2) Frameworks source code for AV-Evasion.
-
+This post will cover how to edit some open source Command & Control (C2) Frameworks source code for AV-Evasion. It will cover Powershell Empire, Pupy C2 and Covenant.
+<!--more-->
 ## Introduction
 
 In the last weeks i did the <a href="https://www.zeropointsecurity.co.uk/red-team-ops">Red Team Operator</a> course and made some new experiences with the open source C2-Framework <a href="https://github.com/cobbr/Covenant">Covenant</a> which is used in the course materials. When i began the course, there was no content for AV-Evasion and C2-Customization, so i did that with Covenant for myself. In the meantime, content for AV-Evasion has been added in the course materials, a part of that material has been released by Rastamouse <a href="https://offensivedefence.co.uk/posts/covenant-profiles-templates/">here</a>. 

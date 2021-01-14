@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 In this post I'm telling a short story from an environment I faced some time ago and how to handle the situation bypassing `Constrained Language Mode` and `Applocker` using well known techniques. I recently had some time to take a look at the <a href="https://github.com/byt3bl33d3r/OffensiveNim">OffensiveNim</a> repository by <a href="https://github.com/byt3bl33d3r">@byt3bl33d3r</a> who did some really awesome work here. By looking at the code examples and fiddling around with some of them I found that this is pretty cool and has nice benefits. Therefore the seccond chapter is about my amusings with the Nim templates. C# binaries wrapped in Nim could have been used to bypass the windows protection mechanisms as well - for fun and profit. There will be nothing new in this blog post, everything used is already public. But maybe some of you will face a similar situation in the future - this post could maybe help you here.
-
+<!--more-->
 ## Bypassing Windows protection mechanisms
 
 So, which situation was I facing? It was a windows environment with <a href="https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/">Constrained Language Mode (CLM)</a> enabled on every system. 

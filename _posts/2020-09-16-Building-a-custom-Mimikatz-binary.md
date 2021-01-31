@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 This post will cover how to build a custom Mimikatz binary by doing source code modification to get past AV/EDR software.
-
+<!--more-->
 ## Introduction
 
 As promised in the last post I´ll explain how to build a custom Mimikatz binary here. I first did this some months ago and integrated the resulting binary in my <a href="https://github.com/S3cur3Th1sSh1t/WinPwn">WinPwn</a> script being reflectively loaded. Some people asked me where exactly I got this version from. Now it´s time to share this information.

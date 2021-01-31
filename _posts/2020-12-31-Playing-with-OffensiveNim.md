@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 In this post I'm telling a short story from an environment I faced some time ago and how to handle the situation bypassing `Constrained Language Mode` and `Applocker` using well known techniques. I recently had some time to take a look at the <a href="https://github.com/byt3bl33d3r/OffensiveNim">OffensiveNim</a> repository by <a href="https://github.com/byt3bl33d3r">@byt3bl33d3r</a> who did some really awesome work here. By looking at the code examples and fiddling around with some of them I found that this is pretty cool and has nice benefits. Therefore the seccond chapter is about my amusings with the Nim templates. C# binaries wrapped in Nim could have been used to bypass the windows protection mechanisms as well - for fun and profit. There will be nothing new in this blog post, everything used is already public. But maybe some of you will face a similar situation in the future - this post could maybe help you here.
-
+<!--more-->
 ## Bypassing Windows protection mechanisms
 
 So, which situation was I facing? It was a windows environment with <a href="https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/">Constrained Language Mode (CLM)</a> enabled on every system. 
@@ -56,13 +56,24 @@ C:\oracle\java\bin\
 
 Dropping a binary in this directory enables us to execute code without restrictions. We can simply place one of the tools mentioned above (not the `MSBuild.exe` or `Rundll32.exe` based ones) in the folder and execute any Powershell command without restrictions because we are also bypassing `Constrained Language Mode`. So far so easy, no new techniques or toolings.
 
-Fun fact: a writeble PATH variable folder location allows a local privilege escalation on the affected clients. The `C:\oracle\java\bin` path was writable and included in the PATH environment variables in this case. You can find this vulnerability with a simple <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">script</a>. If you place a DLL in that directory, which is not located anywhere on the disk but which is demanded by for example a windows service and executed with `NT-Authority\SYSTEM` rights you can gain a system shell. Some publicy known DLLs to exploit this vulnarbility are:
+Fun fact: a writeble PATH variable folder location allows a local privilege escalation on the affected clients. The `C:\oracle\java\bin` path was writable and included in the PATH environment variables in this case. You can find this vulnerability with a simple <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">script</a>. If you place a DLL in that directory, which is not located anywhere on the disk but which is demanded by for example a windows service and executed with `NT-Authority\SYSTEM` rights you may gain a system shell. In addition this service must act on the default DLL search order. Some publicy known DLLs to exploit this vulnarbility are:
+
+* CDPSvc.dll - Connected Devices Platform Service (CDPSvc) - <a href="http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html">http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html</a>
+* WptsExtensions.dll - Windows 10 Task Scheduler service - <a href="https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html">https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html</a>
+* wlanhlp.dll - Windows Server 2008R2 - 2019 NetMan DLL Hijacking <a href="https://itm4n.github.io/windows-server-netman-dll-hijacking/">https://itm4n.github.io/windows-server-netman-dll-hijacking/</a>
+
+---
+**03.01.2021: Update**
+
+Thank you <a href="https://twitter.com/itm4n">itm4n</a> for the clarification. I previously wrote that the following three DLL names are vulnerable. This is not the case, since the default DLL search order is not being used here. Those following three can only be loaded from the SYSTEM32 directory.
+
+---
 
 * windowscoredeviceinfo.dll - loaded whenever an Update Session is created - <a href="https://github.com/itm4n/UsoDllLoader">itm4ns UsoDllLoader</a>
 * phoneinfo.dll - windows problem reporting service - <a href="https://github.com/sailay1996/WerTrigger">sailay1996s WerTrigger</a>
 * Ualapi.dll - Fax Service - <a href="https://github.com/ionescu007/faxhell">ionescu007s faxhell</a>
 
-The only usable list I found so far containing DLL-names to exploit this kind of vulnerability is <a href="https://github.com/sailay1996/awesome_windows_logical_bugs/blob/master/FileWrite2system.txt">here</a>.
+If someone of you knows about more vulnerable services / DLL Hijack possibilities - feel free to DM me.
 
 ## Playing with OffensiveNim
 
@@ -265,6 +276,61 @@ The NimRubeus version got 16/70 detections:
 
 So wrapping binaries into other languages CAN be used to bypass AV-Software as well. However I recommend to obfuscate any C# binary before turning it into an byte array - this should result in even less detections. And if you do it right there is no need for an AMSI bypass. The more people use OffensiveNim I strongly believe that even the small peaces of the Nim template could be flagged someday. So modifications to the template should also be done at this point to stay undetected.
 
+---
+**12.01.2021: Update - Detection methods & Encoding/Encryption**
+
+The detection of .NET assemblies in Nim compiled executables is still pretty easy for AV-Vendors. If we embed the plaintext .NET assembly bytes an analyst can see the embeded binary by just opening it in a hex editor:
+
+<p align="center">
+          <img src="/assets/posts/NimPlaying/HexPSBypass.png">
+</p>
+
+Flagging theese bytes is pretty easy for AV-Vendors. So this method alone is not really good to bypass AV-Software. So if you want your Nim compiled binary to hide the .NET assembly you have to encode/encrypt it and decode/decrypt it at runtime. Base64 encoding and decoding can be done in Nim with the following code:
+
+```batch
+import base64
+import os
+import strformat
+
+func toByteSeq*(str: string): seq[byte] {.inline.} =
+    # Converts a string to the corresponding byte sequence
+    @(str.toOpenArrayByte(0, str.high))
+
+let inFile: string = paramStr(1)
+let inFileContents: string = readFile(inFile)
+
+# To load this .NET assembly we need a byte array or sequence
+var bytesequence: seq[byte] = toByteSeq(inFileContents)
+
+let encoded = encode(bytesequence)
+
+echo fmt"[*] Encoded: {encoded}"
+
+let decoded = decode(encoded)
+
+echo fmt"[*] Decoded: {decoded}"
+```
+
+To fully hide the .NET assembly in the resulting binary you could use AES encryption or XOR-operations. <a href="https://github.com/byt3bl33d3r">@byt3bl33d3r</a> just published an PoC for encryption and decryption via Nim:
+
+<a href="https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim">https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/encrypt_decrypt_bin.nim</a>
+
+This can be used to encrypt .NET assemblies as well as for runtime decryption:
+
+<p align="center">
+          <img src="/assets/posts/NimPlaying/EncryptDecrypt.png">
+</p>
+
+I´ll leave this up to the reader, but one important tip: `import winim/clr` and `import nimcrypto` results in a stack overflow for the AES initialization at the time of writing. So you need to import `winim/clr` via the following:
+
+```batch
+import winim/clr except `[]`
+```
+
+Thanks <a href="https://twitter.com/chvancooten">https://twitter.com/chvancooten</a> for figuring this out.
+
+---
+
 If we step back to the environment with `Constrained Language Mode` and `Applocker` active we could also use one of the mentioned tools to bypass both features with a Nim wrapper. The following code for example contains <a href="https://github.com/padovah4ck/PSByPassCLM">PSByPassCLM</a> wrapped into Nim, which enables us to bypass both features by placing this compiled binary into the `C:\oracle\bin\` folder:
 
 ```batch
@@ -337,6 +403,9 @@ Wrapping existing tools into another language CAN be used for AV-Evasion but i t
 * Generic Applocker bypass - <a href="https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md">https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md</a>
 * Verified Applocker bypass - <a href="https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md">https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md</a>
 * Find writable PATH Environment variable locations - <a href="https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f">https://gist.github.com/wdormann/eb714d1d935bf454eb419a34be266f6f</a>
+* Connected Devices Platform Service (CDPSvc) DLL Hijack - <a href="http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html">http://zeifan.my/security/eop/2019/11/05/windows-service-host-process-eop.html</a>
+* Windows 10 Task Scheduler service DLL Hijack - <a href="https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html">https://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html</a>
+* Windows Server 2008R2 - 2019 NetMan DLL Hijacking <a href="https://itm4n.github.io/windows-server-netman-dll-hijacking/">https://itm4n.github.io/windows-server-netman-dll-hijacking/</a>
 * UsoDllLoader - <a href="https://github.com/itm4n/UsoDllLoader">https://github.com/itm4n/UsoDllLoader</a>
 * WerTrigger - <a href="https://github.com/sailay1996/WerTrigger">https://github.com/sailay1996/WerTrigger</a>
 * Faxhell - <a href="https://github.com/ionescu007/faxhell">https://github.com/ionescu007/faxhell</a>

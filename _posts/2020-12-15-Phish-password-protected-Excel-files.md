@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 This post will cover a little Excel Macro project by <a href="https://twitter.com/0x23353435">@0x23353435</a> and me. It was made during an engagement at a customers environment. They were using a password protected Excel-file as password manager. This post will show how to attack such szenarios and why people should not use this method for password storage.
-
+<!--more-->
 ## Introduction
 
 Excel gives users the option of assigning a password to the sheet so that it is protected from unauthorized access. This can be done under the `File` -> `Info` -> `Protect Workbook` -> `Encrypt with Password` tab:

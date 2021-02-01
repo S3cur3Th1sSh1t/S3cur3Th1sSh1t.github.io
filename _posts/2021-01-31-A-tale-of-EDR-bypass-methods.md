@@ -187,7 +187,7 @@ IntPtr pAllocateSysCall = DInvoke.DynamicInvoke.Generic.GetSyscallStub("NtAlloca
 NtAllocateVirtualMemory fSyscallAllocateMemory = (NtAllocateVirtualMemory)Marshal.GetDelegateForFunctionPointer(pAllocateSysCall, typeof(NtAllocateVirtualMemory));
 ```
 
-For every of the three methods you also need to create unmanaged `Delegates` for every Windows API function in your code. I won´t cover the whole process here as you can just read the linked blog posts from @TheRealWhover or @Jean_Maes_1994.
+For every of the three methods you also need to create unmanaged `Delegates` for every Windows API function in your code. I won´t cover the whole process here as you can just read the linked blog posts from @TheRealWover or @Jean_Maes_1994.
 
 Initially I planned to show, how to port a P/Invoke `CreateRemoteThread` C# shellcode injection PoC into a D/Invoke `Syscall` version. I was fiddling around with all those `NTDLL.dll` functions needed like `NtOpenProcess`, `NtAllocateVirtualMemory`, `NtWriteVirtualMemory` and `CreateThreadEx` but was unfortunately not able to successfully get my shellcode execution working. This was because I never used those `NTDLL.dll` functions before and struggled hard with the questions "which value should be placed in which function argument", "which kernel32.dll function resolves to which ntdll.dll function" and had a brainfuck many evenings trying to get this to work. In parallel I confronted the awesome <a href="https://twitter.com/_RastaMouse">@_RastaMouse</a> with all my questions about it. It took only a few days and he published a whole blog post covering exactly this topic: 
 
@@ -338,7 +338,7 @@ Feedback and additions or corrections are strongly encouraged. You can reach me 
 * DInvoke blog post - <a href="https://thewover.github.io/Dynamic-Invoke/">https://thewover.github.io/Dynamic-Invoke/</a>
 * NVISO DInvoke blog post - <a href="https://blog.nviso.eu/2020/11/20/dynamic-invocation-in-net-to-bypass-hooks/">https://blog.nviso.eu/2020/11/20/dynamic-invocation-in-net-to-bypass-hooks/</a>
 * DInvisibleRegistry - <a href="https://github.com/NVISO-BE/DInvisibleRegistry">https://github.com/NVISO-BE/DInvisibleRegistry</a>
-* Rastamouse DInvoke Syscalls - <a href="https://offensivedefence.co.uk/posts/dinvoke-syscalls/</a>https://offensivedefence.co.uk/posts/dinvoke-syscalls/</a>
+* Rastamouse DInvoke Syscalls - <a href="https://offensivedefence.co.uk/posts/dinvoke-syscalls/">https://offensivedefence.co.uk/posts/dinvoke-syscalls/</a>
 * Unhooking in C++ - <a href="https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++">https://www.ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++</a>
 * Playing with OffensiveNim - <a href="https://s3cur3th1ssh1t.github.io/Playing-with-OffensiveNim/">https://s3cur3th1ssh1t.github.io/Playing-with-OffensiveNim/</a>
 * OffensiveNim - <a href="https://github.com/byt3bl33d3r/OffensiveNim">https://github.com/byt3bl33d3r/OffensiveNim</a>

@@ -16,5 +16,3 @@ I'm doing penetration tests and red team engagements for 5+ years now at <a href
 Now with this blog i see another challenge for myself by writing posts and sharing knowledge. As with the tool writing im doing this in my spare time for fun and learning purposes.
 
 I hope i can motivate others for the Infosec community with some articles like many others motivated me the last years.
-
-If you like what I'm doing you can also support me via <iframe src="https://github.com/sponsors/S3cur3Th1sSh1t/button" title="Sponsor S3cur3Th1sSh1t" height="35" width="116" style="border: 0;"></iframe>.

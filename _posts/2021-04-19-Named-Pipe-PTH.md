@@ -183,7 +183,7 @@ Comparing those two packet captures results in only one very small difference. `
 $SMB_named_pipe_bytes = 0x74,0x00,0x65,0x00,0x73,0x00,0x74,0x00,0x70,0x00,0x69,0x00,0x70,0x00,0x65,0x00 # \testpipe
 ```
 
-The result is an authentication to localhost as the user `testing`:
+The result is an local authentication to the Named Pipe as the user `testing`:
 
 <p align="center">
           <img src="/assets/posts/NamedPipePTH/FirstSuccess.JPG">

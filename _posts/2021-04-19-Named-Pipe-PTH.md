@@ -235,6 +235,29 @@ I hope, that you also learned something from that or at least can use the result
 
 <a href="https://github.com/S3cur3Th1sSh1t/NamedPipePTH">https://github.com/S3cur3Th1sSh1t/NamedPipePTH</a>
 
+---
+**20.04.2021: Update**
+
+I'm pretty sure, that I before publication of the tool tested the content of Start-Job Scriptblocks for AMSI scans/blocks. And it was not scanned neither blocked. After the publication, Microsoft obviously decided to activate this feature, because the standalone script didn't work anymore with Defender enabled even after patching `AMSI.dll` in memory for the process:
+
+<p align="center">
+          <img src="/assets/posts/NamedPipePTH/DefenderBlock.png">
+</p>
+
+Therefore, I decided to switch from the native `Start-Job` function to the `Start-ThreadJob` function, which again bypasses Defender because its executed in the same process:
+
+<p align="center">
+          <img src="/assets/posts/NamedPipePTH/ThreadJob.JPG">
+</p>
+
+If this description is true, `Start-Job` *should have* scanned and blocked scripts before because it's another process. But here we stay in the same process, therefore a bypass works:
+
+<p align="center">
+          <img src="/assets/posts/NamedPipePTH/Bypass.JPG">
+</p>
+
+---
+
 ## Links & Resources
 
 * Crackmapexec - <a href="https://github.com/byt3bl33d3r/CrackMapExec">https://github.com/byt3bl33d3r/CrackMapExec</a>
@@ -254,3 +277,4 @@ I hope, that you also learned something from that or at least can use the result
 * Invoke-ReflectivePEInjection - <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1">https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1</a>
 * Sharp-SMBExec - <a href="https://github.com/checkymander/Sharp-SMBExec">https://github.com/checkymander/Sharp-SMBExec</a>
 * NamedPipePTH - <a href="https://github.com/S3cur3Th1sSh1t/NamedPipePTH">https://github.com/S3cur3Th1sSh1t/NamedPipePTH</a>
+* PSThreadJob - <a href="https://github.com/PaulHigin/PSThreadJob">https://github.com/PaulHigin/PSThreadJob</a>

@@ -3,7 +3,14 @@ title: "Named Pipe Pass-the-Hash"
 layout: "post"
 ---
 
-This post will cover a little project I did last week and is about Named pipe Impersonation in combination with Pass-the-Hash (PTH) to execute binaries as another user. Both techniques used are not new and often used, the `only` thing I did here is combination and modification of existing tools. The current public tools all use PTH for network authentication only. The difference to this "new" technique is therefore, that you can also spawn a new shell or C2-Stager as the PTH user for local actions `and` network authentication. 
+This post will cover a little project I did last week and is about Named pipe Impersonation in combination with Pass-the-Hash (PTH) to execute binaries as another user. Both techniques used are not new and often used, the `only` thing I did here is combination and modification of existing tools. The current public tools all use PTH for network authentication only. The difference to this "new" technique is therefore, that you can also spawn a new shell or C2-Stager as the PTH user for local actions ~~`and` network authentication~~.
+
+---
+**2.05.2021: Update**
+
+Unfortunately I learned, that my technique can only be used for local actions, but not for network authentication, as Impersonation Tokens are restricted to that.
+
+---
 
 <!--more-->
 
@@ -225,7 +232,26 @@ I see my code still as PoC, because it is far away from being OPSEC safe and I d
 
 For those of you looking for a C# solution: <a href="https://github.com/checkymander/Sharp-SMBExec">Sharp-SMBExec</a> is a C# port of `Invoke-SMBExec` which can be modified the same way I did here to get a C# version for the PTH to the Named Pipe part. However, the PipeServerImpersonate part should also be ported, which in my opinion is more work todo.
 
+---
+**2.05.2021: Update**
+
+I also wrote a C# version based on this idea. It can be found here:
+
+<a href="https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH">https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH</a>
+
+---
+
 The whole project gave me the idea, that it would be really cool to also add an option to <a href="https://github.com/SecureAuthCorp/impacket">impacket</a>'s  `ntlmrelayx.py` to relay connections to a Named Pipe. Imagine you compromised a single host in a customer environment and this single host didn't gave any valuable credentials but has `SMB Signing disabled`. Modifying PipeServerImpersonate, so that the Named Pipe is not closed but re-opened again after executing a binary would make it possible to get a C2-Stager for every single incoming NetNTLMV2 connection. This means raining shells. The connections only need to be relayed to `\\targetserver\IPC$\pipename` to get a shell or C2-connection. 
+
+---
+**2.05.2021: Update**
+
+This idea was nice with the background thought, that we have local `and` network authentication for the new process. But we only do stuff locally with an Impersonation token, therefore the raining shells would not help us to move anywhere.
+
+Going through <a href="https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH">https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH</a>
+
+
+---
 
 ## Conclusion
 
@@ -233,7 +259,28 @@ This is the first time, that I created somehow a new technique. At least I didn'
 
 I hope, that you also learned something from that or at least can use the resulting tool in some engagements whenever you are stuck in a situation described above. The script/tool is released with this post, and feedback is as always very welcome!
 
-<a href="https://github.com/S3cur3Th1sSh1t/NamedPipePTH">https://github.com/S3cur3Th1sSh1t/NamedPipePTH</a>
+<a href="https://twitter.com/itm4n">@itm4n's</a> article about  PrintSpoofer - <a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/">https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/</a> - I also had the idea and tested, if it's possible to relay a Domain Controllers Computer-Account Hash to our Named Pipe via Spoolsample. This can be done with the MS-RPRN part of the <a href="Spoolsample code">https://github.com/leechristensen/SpoolSample/tree/master/MS-RPRN</a> by using `/` instead of `\` for the target system like this:
+
+```batch
+MS-RPRN.exe \\DomainControllerFQDN \\OutCompromisedSystemFQDN/pipe/pipename
+```
+
+This works perfectly fine, and we therefore can get a shell as Domain Controller computer account:
+
+<p align="center">
+          <img src="/assets/posts/NamedPipePTH/DCRelay.jpg">
+</p>
+
+Using <a href="https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools/tree/master/TokenViewer">TokenViewer</a> gives us the possibility to see, which Token Type and Impersonation Level we have:
+
+<p align="center">
+          <img src="/assets/posts/NamedPipePTH/TokenViewer.png">
+</p>
+
+I learned after writing this post and fiddling around with the new impersonated users shells, that `Impersonation Tokens` are restricted to Operating System local actions only. Processes with this Token Type cannot access ressources in the network like LDAP, SMB, HTTP or whatever else. Therefore, our DC shell for example is useless.
+
+Until someone finds a way to get an `Delegation Token` from a process with an `Impersonation Token` for example. If the impersonated user is logged on interactively, you can also create a sheduled task for that user and trigger it. This would for example result in network access for that newly created task.
+
 
 ---
 **20.04.2021: Update**

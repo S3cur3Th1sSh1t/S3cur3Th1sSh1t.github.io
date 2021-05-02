@@ -248,16 +248,8 @@ The whole project gave me the idea, that it would be really cool to also add an 
 
 This idea was nice with the background thought, that we have local `and` network authentication for the new process. But we only do stuff locally with an Impersonation token, therefore the raining shells would not help us to move anywhere.
 
-Going through <a href="https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH">https://github.com/S3cur3Th1sSh1t/SharpNamedPipePTH</a>
-
 
 ---
-
-## Conclusion
-
-This is the first time, that I created somehow a new technique. At least I didn't see anyone else using a combination of PTH and Named Pipe Impersonation with the same goal. For me, this was a pretty exciting experience and I learned a lot again.
-
-I hope, that you also learned something from that or at least can use the resulting tool in some engagements whenever you are stuck in a situation described above. The script/tool is released with this post, and feedback is as always very welcome!
 
 <a href="https://twitter.com/itm4n">@itm4n's</a> article about  PrintSpoofer - <a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/">https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/</a> - I also had the idea and tested, if it's possible to relay a Domain Controllers Computer-Account Hash to our Named Pipe via Spoolsample. This can be done with the MS-RPRN part of the <a href="Spoolsample code">https://github.com/leechristensen/SpoolSample/tree/master/MS-RPRN</a> by using `/` instead of `\` for the target system like this:
 
@@ -280,6 +272,12 @@ Using <a href="https://github.com/googleprojectzero/sandbox-attacksurface-analys
 I learned after writing this post and fiddling around with the new impersonated users shells, that `Impersonation Tokens` are restricted to Operating System local actions only. Processes with this Token Type cannot access ressources in the network like LDAP, SMB, HTTP or whatever else. Therefore, our DC shell for example is useless.
 
 Until someone finds a way to get an `Delegation Token` from a process with an `Impersonation Token` for example. If the impersonated user is logged on interactively, you can also create a sheduled task for that user and trigger it. This would for example result in network access for that newly created task.
+
+## Conclusion
+
+This is the first time, that I created somehow a new technique. At least I didn't see anyone else using a combination of PTH and Named Pipe Impersonation with the same goal. For me, this was a pretty exciting experience and I learned a lot again.
+
+I hope, that you also learned something from that or at least can use the resulting tool in some engagements whenever you are stuck in a situation described above. The script/tool is released with this post, and feedback is as always very welcome!
 
 
 ---

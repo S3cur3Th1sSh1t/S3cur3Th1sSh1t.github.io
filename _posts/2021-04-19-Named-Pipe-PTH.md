@@ -246,7 +246,7 @@ The whole project gave me the idea, that it would be really cool to also add an 
 ---
 **2.05.2021: Update**
 
-This idea was nice with the background thought, that we have local `and` network authentication for the new process. But we only do stuff locally with an Impersonation token, therefore the raining shells would not help us to move anywhere.
+This idea was nice with the background thought, that we have local `and` network authentication for the new process. But we can only do stuff locally with an Impersonation token. This is also explained in the next part. Therefore the raining shells would not help us to move anywhere.
 
 
 ---

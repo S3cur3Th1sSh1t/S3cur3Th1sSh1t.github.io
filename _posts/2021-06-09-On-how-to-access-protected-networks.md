@@ -11,7 +11,7 @@ I had the idea for this post and just wrote everything up from my mind. So don't
 
 ## Introduction
 
-For given reasons, germany enforced many new regulations and laws to companies in different sectors to improve their Cyber-/IT-security in the last years. The so called `KRITIS` companies and organisations - which hold critical infrastructure - were defined. If those companies/organisations are target of an for example Advanced Persistent Thread (APT) with destructive motivations, this can in the worst case lead to serious Implications for state and population. Those `KRITIS` companies have for example perform the certification `ISO 27001`, which is a cyber security best practice specification for an information security management system. Some `KRITIS` sectors are the following:
+For given reasons, germany enforced many new regulations and laws to companies in different sectors to improve their Cyber-/IT-security in the last years. The so called `KRITIS` companies and organisations - which hold critical infrastructure - were defined. If those companies/organisations are target of an for example Advanced Persistent Threat (APT) with destructive motivations, this can in the worst case lead to serious Implications for state and population. Those `KRITIS` companies have for example perform the certification `ISO 27001`, which is a cyber security best practice specification for an information security management system. Some `KRITIS` sectors are the following:
 
 * Energy sector
 * Water sector

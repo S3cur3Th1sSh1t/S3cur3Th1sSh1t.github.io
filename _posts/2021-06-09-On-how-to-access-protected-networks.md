@@ -3,7 +3,7 @@ title: "On how to access (protected) networks"
 layout: "post"
 ---
 
-This post is about common misconfigurations and attack szenarios that enable an attacker to access saparated networks with critical systems or sensitive data. The content is heavily inspired by my personal experience in real world projects and company networks.
+This post is about common misconfigurations and attack szenarios that enable an attacker to access separated networks with critical systems or sensitive data. The content is heavily inspired by my personal experience in real world projects and company networks.
 
 <!--more-->
 

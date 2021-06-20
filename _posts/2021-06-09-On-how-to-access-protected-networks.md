@@ -96,6 +96,19 @@ SharpOxidResolver.exe 192.168.100.22
 
 If your target Dual-Homed-Host is not domain joined, you have to search for vulnerabilities on service level or web application level to compromise it. You may also be able to enumerate informations about a (possibly used) remote domain.
 
+---
+**20.06.2021: Update**
+
+I just came accross another technique with a corresponding tool, that can be used to find Dual-Homed-Hosts. <a href="https://github.com/zeronetworks/cornershot">cornershot</a> is using some different RPC Methods to coerce authentication from a target system to a third host. Depending on the RPC response, it's possible to determine if the third party system is reachable on a specific port or not. If a host from your separated network is reachable, you may have found a Dual-Homed-Host.
+
+<p align="center">
+          <img src="/assets/posts/AccessProtected/Cornershot.JPG">
+</p>
+
+Nice side effect: these RPC methods can also be used like the MSRPN Printer Bug for authentication on the attacker system, so that the incoming connection can be relayed.
+
+---
+
 Currently I don't know any linux specific tools or flaws that allow remote network Interface enumeration without authentication. But common ways to enumerate them are for example SNMP *read* Community Strings.
 
 We as penetration testers have limited time to find those systems, so don't mind to just ask your client for any known systems. If there are some, take a close look at them. They are a quick win.

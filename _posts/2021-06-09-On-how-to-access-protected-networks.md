@@ -99,7 +99,7 @@ If your target Dual-Homed-Host is not domain joined, you have to search for vuln
 ---
 **20.06.2021: Update**
 
-I just came accross another technique with a corresponding tool, that can be used to find Dual-Homed-Hosts. <a href="https://github.com/zeronetworks/cornershot">cornershot</a> is using some different RPC Methods to coerce authentication from a target system to a third host. Depending on the RPC response, it's possible to determine if the third party system is reachable on a specific port or not. If a host from your separated network is reachable, you may have found a Dual-Homed-Host.
+I just came accross another technique with a corresponding tool, that can be used to find Dual-Homed-Hosts. <a href="https://github.com/zeronetworks/cornershot">cornershot</a> is using some different RPC Methods to coerce authentication from a target system to a third host. Depending on the RPC response, it's possible to determine if the third party system is reachable on a specific port or not. If a host from your separated network is reachable, you may have found a Dual-Homed-Host. This technique, however also needs valid credentials. 
 
 <p align="center">
           <img src="/assets/posts/AccessProtected/Cornershot.JPG">

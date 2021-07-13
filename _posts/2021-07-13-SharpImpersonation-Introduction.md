@@ -4,7 +4,7 @@ layout: "post"
 ---
 
 This blog is an introduction for my newly released **post exploitation / privilege escalation** tool <a href="https://github.com/S3cur3Th1sSh1t/SharpImpersonation">SharpImpersonation</a>. The code base makes heavy use of <a href="https://github.com/0xbadjuju/Tokenvator">Tokenvator</a>, so a big credit goes to <a href="https://twitter.com/0xbadjuju">@0xbadjuju</a>. I changed the usage and also added several other improvements. This post covers one example usecase - and afterwards we dive into the features and changes.
-
+___________________________________________________________________________
 <!--more-->
 
 The tool was <a href="https://github.com/sponsors/S3cur3Th1sSh1t">Sponsorware</a> for over a month now and is publicy released with this blog post.

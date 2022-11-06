@@ -3,7 +3,7 @@ title: "Alternative use cases for SystemFunction032"
 layout: "post"
 ---
 
-Some days ago I woke up in the middle of the night - thinking about the `Advapi32.dll`/`SystemFunction032` function. This post will show my idea and sample Code on how to weaponize it.
+Some days ago I woke up in the middle of the night - thinking about the `Advapi32.dll`/`SystemFunction032` function. Really? Yes. Strange, this InfoSec folks. This post will show my nightly idea and sample Code on how to weaponize it.
 
 <!--more-->
 
@@ -22,7 +22,7 @@ So this function is able to encrypt/decrypt memory regions via RC4 encryption. A
 
 Although RC4 is considered as insecure and even broken for years it provides a much better memory evasion for e.G. Shellcode to us than simple `XOR`.
 
-## The Midnight idea
+## The midnight idea
 
 Typically if you want to execute Shellcode in a process you will need the following steps:
 
@@ -69,7 +69,7 @@ But later on - when debugging - it turned out, that `SystemFunction032` somehow 
 
 But we could use the following Nim Code to get an encrypted Shellcode blob:
 
-```python
+```ruby
 import winim
 import winim/lean
 
@@ -138,7 +138,7 @@ writeFile("enc.bin", shellcode)
 
 To execute this, we could simply use the following Nim code:
 
-```python
+```ruby
 import winim
 import winim/lean
 

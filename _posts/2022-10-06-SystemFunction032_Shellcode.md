@@ -77,7 +77,7 @@ openssl enc -rc4 -in calc.bin -K `echo -n 'aaaaaaaaaaaaaaaa' | xxd -p` -nosalt >
 
 ---
 
-Instead we could use the following Nim Code to get an encrypted Shellcode blob (from a Windows OS):
+We could also use the following Nim Code to get an encrypted Shellcode blob (Windows OS only):
 
 ```ruby
 import winim
@@ -149,7 +149,7 @@ writeFile("enc.bin", shellcode)
 ---
 **09.11.2022: Update**
 
-[snovvcrash](https://twitter.com/snovvcrash) published a simple Python Script after this blog which simplifies the encryption with a [Python Script](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99):
+[snovvcrash](https://twitter.com/snovvcrash) also published a simple Python Script after this blog which simplifies the encryption with a [Python Script](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99):
 ```python
 #!/usr/bin/env python3
 

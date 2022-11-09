@@ -18,9 +18,9 @@ So this function is able to encrypt/decrypt memory regions via RC4 encryption. A
           <img src="/assets/posts/SystemFunction032/SystemFunction032.PNG">
 </p>
 
-"Why the heck do you see something special in that?" you could ask. Well, at least I personally did not know about alternative functions for `existing memory region` encryption/decryption except for manual `XOR` operations. But as you can read in for example Kyle Avery's blog about [Avoiding Memory Scanners](https://www.blackhillsinfosec.com/avoiding-memory-scanners/) a simple `XOR` even with a longer key got in the meanwhile to detect for AV/EDR vendors.
+"Why the heck do you see something special in that?" you could ask. Well, at least I personally did not know about alternative functions for `existing memory region` encryption/decryption except for `XOR` operations. But as you can read in for example Kyle Avery's blog about [Avoiding Memory Scanners](https://www.blackhillsinfosec.com/avoiding-memory-scanners/) a simple `XOR` even with a longer key got in the meanwhile to detect for AV/EDR vendors.
 
-Although RC4 is considered as insecure and even broken for years it provides a much better memory evasion for e.G. Shellcode to us than simple `XOR`.
+Although RC4 is considered as insecure and even broken for years it provides a much better memory evasion for e.G. Shellcode to us than simple `XOR`. It would be even more OpSec save to use AES here instead. But one single Windows API is at least very easy to use.
 
 ## The midnight idea
 
@@ -41,7 +41,7 @@ To avoid signature based detections we could encrypt our Shellcode and decrypt t
 5. (Optional) change Permissions to `RX` from `RW` for execution
 6. Execute the Shellcode as Thread/APC/Callback/whatever
 
-In this case, the Shellcode itself could get detected when writing it into memory e.g. by userland hooks as we would need to pass a pointer of the cleartext Shellcode to `WriteProcessMemory` or `NtWriteVirtualMemory`. And there are nearly no encryption algorithms which accept memory pointers as input to directly encrypt memory regions.
+In this case, the Shellcode itself could get detected when writing it into memory e.g. by userland hooks as we would need to pass a pointer of the cleartext Shellcode to `WriteProcessMemory` or `NtWriteVirtualMemory`.
 
 The usage of `XOR` could avoid that, because we can even `XOR` decrypt the memory region **after** writing the encrypted value into memory. It would look like this:
 
@@ -67,7 +67,17 @@ cat calc.bin | openssl enc -rc4 -nosalt -k "aaaaaaaaaaaaaaaa" > enccalc.bin
 
 But later on - when debugging - it turned out, that `SystemFunction032` somehow encrypts/decrypts different to OpenSSL/RC4. So we cannot do it like that. 
 
-But we could use the following Nim Code to get an encrypted Shellcode blob:
+---
+**09.11.2022: Update**
+
+[an0n_r0](https://twitter.com/an0n_r0) gave further [information](https://twitter.com/an0n_r0/status/1589913098970091521) on how to do the encryption with OpenSSL. You can do it as follows:
+```batch
+openssl enc -rc4 -in calc.bin -K `echo -n 'aaaaaaaaaaaaaaaa' | xxd -p` -nosalt > enccalc.bin
+```
+
+---
+
+Instead we could use the following Nim Code to get an encrypted Shellcode blob (from a Windows OS):
 
 ```ruby
 import winim
@@ -135,6 +145,65 @@ echo "Writing encrypted shellcode to dec.bin"
 writeFile("enc.bin", shellcode)
 # enc.bin contains our encrypted Shellcode
 ```
+
+---
+**09.11.2022: Update**
+
+[snovvcrash](https://twitter.com/snovvcrash) published a simple Python Script after this blog which simplifies the encryption with a [Python Script](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99):
+```python
+#!/usr/bin/env python3
+
+from typing import Iterator
+from base64 import b64encode
+
+
+# Stolen from: https://gist.github.com/hsauers5/491f9dde975f1eaa97103427eda50071
+def key_scheduling(key: bytes) -> list:
+	sched = [i for i in range(0, 256)]
+
+	i = 0
+	for j in range(0, 256):
+		i = (i + sched[j] + key[j % len(key)]) % 256
+		tmp = sched[j]
+		sched[j] = sched[i]
+		sched[i] = tmp
+
+	return sched
+
+
+def stream_generation(sched: list[int]) -> Iterator[bytes]:
+	i, j = 0, 0
+	while True:
+		i = (1 + i) % 256
+		j = (sched[i] + j) % 256
+		tmp = sched[j]
+		sched[j] = sched[i]
+		sched[i] = tmp
+		yield sched[(sched[i] + sched[j]) % 256]        
+
+
+def encrypt(plaintext: bytes, key: bytes) -> bytes:
+	sched = key_scheduling(key)
+	key_stream = stream_generation(sched)
+	
+	ciphertext = b''
+	for char in plaintext:
+		enc = char ^ next(key_stream)
+		ciphertext += bytes([enc])
+		
+	return ciphertext
+
+
+if __name__ == '__main__':
+	# msfvenom -p windows/x64/exec CMD=calc.exe -f raw -o calc.bin
+	with open('calc.bin', 'rb') as f:
+		result = encrypt(plaintext=f.read(), key=b'aaaaaaaaaaaaaaaa')
+
+	print(b64encode(result).decode())
+```
+
+---
+
 
 To execute this, we could simply use the following Nim code:
 

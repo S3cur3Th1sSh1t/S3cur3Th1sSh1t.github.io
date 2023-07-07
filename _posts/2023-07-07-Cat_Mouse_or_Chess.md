@@ -247,6 +247,10 @@ As mentioned in the last chapter already, the published Proof of Concept will sp
 
 When I did test the technique against different EDR vendors some months ago (before publicly releasing it), it was neither alerted or prevented by any of them. In one specific case an vendor was injecting an DLL instead of loading it the regular way - if this is the case my PoC cannot block it. In another test, one specific DLL out of five different from that vendor did lead to process crashes when blocking it - luckily it was not the one placing hooks. So in any case, the PoC may need modifications per vendor or being adjusted depending on some special cases.
 
+The final PoC can be found here:
+
+- https://github.com/S3cur3Th1sSh1t/Ruy-Lopez
+
 #### Is that OPSec Safe?
 
 Well. Using Injection and hooking in general has well documented easy to spot Indicators of Compromise (IoCs) in any case. So if a Blue Team or Hunter/Analyst reviews the processes being involved, it will be easy to spot this IoCs and find out something malicious happened. However, till now I didnt face automated detections alerting on or preventing this technique. EDR vendors could for example also integrate checks, that if a suspended process was resumed and if some `ntdll.dll` function was hooked at that point kill the process. I guess, there are very few or maybe even no false positives at all for such a situation.

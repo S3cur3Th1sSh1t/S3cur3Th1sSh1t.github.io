@@ -109,7 +109,7 @@ The first original PoC was then single stepping forward, till the Syscall instru
 
 #### Patching the DLL entrypoint
 
-[]() released a [blog Post](https://ethicalchaos.dev/2020/06/14/lets-create-an-edr-and-bypass-it-part-2/) and the tool [SharpBlock]() in 2020. This technique works as follows:
+[CCob](https://github.com/CCob) released a [blog Post](https://ethicalchaos.dev/2020/06/14/lets-create-an-edr-and-bypass-it-part-2/) and the tool [SharpBlock]() in 2020. This technique works as follows:
 1. Create a new Process with the `DEBUG_ONLY_THIS_PROCESS` flag. This leads to the parent process being capable of acting as a debugger for the new process. As Debugger, we can intercept execution for specific events and execute code before resuming execution.
 2. As Debugger, the parent process waits for `LOAD_DLL_DEBUG_EVENT` events, which appear **after** DLLs were loaded into a process but **before** something out of them was executed.
 3. The parent process checks the DLL being loaded. If it was the EDR DLL, it will patch the Entrypoint from it with `0x3c - return`, so that the DLL will afterward instead of placing hooks just return and exit.

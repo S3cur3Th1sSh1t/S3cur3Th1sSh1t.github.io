@@ -7,6 +7,10 @@ Phishing attacks are still the most used attack vector for initial access and cr
 
 <!--more-->
 
+This blog post was written and published on my employer's website, where it can be found here:
+
+- [https://www.r-tec.net/r-tec-blog-evade-signature-based-phishing-detections.html](https://www.r-tec.net/r-tec-blog-evade-signature-based-phishing-detections.html)
+
 According [to google](https://developers.google.com/safe-browsing):
 
 *"Safe Browsing is a Google service that lets client applications check URLs against Google's constantly updated lists of unsafe web resources. Examples of unsafe web resources are social engineering sites (phishing and deceptive sites) and sites that host malware or unwanted software. Come see what's possible.*

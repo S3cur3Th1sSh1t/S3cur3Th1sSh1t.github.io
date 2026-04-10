@@ -107,13 +107,13 @@ Well, it looks like the `DataProtectionScope` of `LocalSystem` is not equal to `
 
 A modified version of the WIFI credential dumping code, which includes impersonation of the SYSTEM account before decryption can be found here:
 
-[Link to Github (https://gist.github.com/S3cur3Th1sSh1t/ca315ccd46ae4b28c0abb4b450cbeedb)](https://gist.github.com/S3cur3Th1sSh1t/ca315ccd46ae4b28c0abb4b450cbeedb)
+[https://gist.github.com/S3cur3Th1sSh1t/ca315ccd46ae4b28c0abb4b450cbeedb](https://gist.github.com/S3cur3Th1sSh1t/ca315ccd46ae4b28c0abb4b450cbeedb)
 
 Impersonation of SYSTEM on the other hand, is also alerted or blocked by some EDR vendors via userland hooks, so consider doing proper unhooking before using this code. I was wondering at this point - are there alternatives to SYSTEM impersonation? [Asking the community](https://twitter.com/ShitSecure/status/1766048125242814630) resulted in a proper answer by [subat0mik](https://twitter.com/subat0mik) here. As already implemented in [SharpSCCM](https://github.com/Mayyhem/SharpSCCM/blob/f43eb0812a7c7109a62ac9062db4b94419bf2420/lib/LSADump.cs#L60) it's also possible to modify the LSA Secrets key DACLs, so that non-SYSTEM users can retrieve the masterkey.
 
 What sounds easy here resulted in >1000 more lines of code in the PoC for WIFI credential extraction, as no Windows API can be used for DPAPI decryption with custom masterkeys but instead, the whole process needs to be done manually. Luckily for us, projects like [Mimikatz](https://github.com/gentilkiwi/mimikatz/), [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI/) or [SharpSCCM](https://github.com/Mayyhem/SharpSCCM/) contain all the needed logic/code already. The modified PoC can be found here:
 
-[Link to Github (https://gist.github.com/S3cur3Th1sSh1t/bc8a7b1b7972f25bda687a33bd0ebde5)](https://gist.github.com/S3cur3Th1sSh1t/bc8a7b1b7972f25bda687a33bd0ebde5)
+[https://gist.github.com/S3cur3Th1sSh1t/bc8a7b1b7972f25bda687a33bd0ebde5](https://gist.github.com/S3cur3Th1sSh1t/bc8a7b1b7972f25bda687a33bd0ebde5)
 
 <p align="center">
           <img src="/assets/posts/WIFICredentialDumping/Blog-image07-Elevated_DPAPI_decryption.png">

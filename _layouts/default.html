@@ -29,8 +29,10 @@
   {% endunless %}
   {% if site.navigation or site.external %}
     {% include menu.html menu=site.navigation icons=false %}
-    <a href="https://www.multiplayer-snake.com/" target="_blank" rel="noopener" style="font-size:0.85em; opacity:0.7; text-decoration:none;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Tired of hacking? 🐍</a>
-    {% include menu.html menu=site.external icons=true %}
+    <div style="display:flex; align-items:center;">
+      {% include menu.html menu=site.external icons=true %}
+      <a href="https://www.multiplayer-snake.com/" target="_blank" rel="noopener" style="margin-left:1.2em; font-size:0.85em; opacity:0.7; text-decoration:none; white-space:nowrap;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Tired of hacking? 🐍</a>
+    </div>
   {% else %}
     {% assign pages = site.pages | where_exp: "item", "item.title and item.sitemap != false" | sort: "order" %}
     {% include menu.html menu=pages %}

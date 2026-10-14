@@ -23,16 +23,14 @@
 {% if site.comments.disqus_shortname and page.layout == "post" %}<script src="//{{ site.comments.disqus_shortname }}.disqus.com/embed.js" async></script>{% endif %}
 {% if site.comments.isso_domain and page.layout == "post" %}<script data-isso="http://{{ site.comments.isso_domain }}" src="//{{ site.comments.isso_domain }}/js/embed.min.js"></script>{% endif %}
 
-<header class="icons">
+<header class="icons" style="position:relative;">
   {% unless site.show_title != true and site.navigation and site.external %}
     <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
   {% endunless %}
   {% if site.navigation or site.external %}
     {% include menu.html menu=site.navigation icons=false %}
-    <div style="display:flex; align-items:center;">
-      {% include menu.html menu=site.external icons=true %}
-      <a href="https://www.multiplayer-snake.com/" target="_blank" rel="noopener" style="margin-left:1.2em; font-size:0.85em; opacity:0.7; text-decoration:none; white-space:nowrap;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Tired of hacking? 🐍</a>
-    </div>
+    {% include menu.html menu=site.external icons=true %}
+    <a href="https://www.multiplayer-snake.com/" target="_blank" rel="noopener" style="position:absolute; top:1.75em; right:1.5em; font-size:0.85em; opacity:0.7; text-decoration:none; white-space:nowrap;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Tired of hacking? 🐍</a>
   {% else %}
     {% assign pages = site.pages | where_exp: "item", "item.title and item.sitemap != false" | sort: "order" %}
     {% include menu.html menu=pages %}
